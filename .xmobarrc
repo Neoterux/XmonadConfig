@@ -1,0 +1,33 @@
+Config { font = "xft:mononoki Nerd Font:size=11"
+        , borderColor = "black"
+        , border = TopB
+        , bgColor = "black"
+        , fgColor = "grey"
+        , position = Top
+        , textOffset = -1
+        , iconOffset = -1
+        , iconRoot = "."
+        , allDesktops = True
+        , overrideRedirect = True
+        , commands = [Run Network "enp4s0" ["-L","0","-H","32",
+                                          "--normal","green","--high","red"] 10
+                    , Run Cpu ["-L","3","-H","50",
+                               "--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Com "uname" ["-s","-r"] "" 36000
+                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+                    , Run Com "whoami" [] "" 4294967296
+                    , Run CpuFreq ["-t", "Freq:<cpu0>GHz 龍", "-L", "2", "-H", "4",
+                                   "-l", "lightblue", "-n", "white", "-h", "green"] 50
+                    , Run CoreTemp ["-t", "Temp:<core0>糖",
+                                    "-L", "40", "-H", "60",
+                                    "-l", "lightblue", "-n", "gray90", "-h", "red"] 50
+                    , Run MultiCpu [ "-t", "Cpu: <total>% <ipat>",
+                                     "-L", "3", "-H", "50"] 50
+                    , Run StdinReader
+                    ]
+        , sepChar = "%"
+        , alignSep = "}{"
+        , template = "[ ] %StdinReader% <box type=Bottom width=2 color=red>[%whoami%]</box> %multicpu% %cpufreq% | %memory% * %swap% | %enp4s0% }{ <fc=#ee9a00>%date%</fc> | %uname%"
+}
