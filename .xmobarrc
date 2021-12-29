@@ -1,12 +1,12 @@
 Config { font = "xft:TerminessTTF Nerd Font:size=11"
         , borderColor = "black"
-        , border = TopB
+        , border = NoBorder
         , bgColor = "#1E1E1E"
         , fgColor = "grey"
         , position = Top
-        , textOffset = -1
-        , iconOffset = -1
-        , iconRoot = "."
+--        , textOffset = -1
+--        , iconOffset = -1
+--        , iconRoot = "."
         , allDesktops = True
         , overrideRedirect = True
         , commands = [Run Network "enp4s0" ["--template", "<tx>KB|<tx>KB"
@@ -14,23 +14,23 @@ Config { font = "xft:TerminessTTF Nerd Font:size=11"
                                            , "--High"   , "700"
                                            , "--low"    , "lightblue"
                                            , "--normal" , "green"
-                                           , "--high"   ,"red"
+                                           , "--high"   , "red"
                                            ] 10
                 -- Memory monitor
-                    , Run Memory [ "--template", "Mem: <used>M (<usedratio>%)"
-                                 ] 10
+                    , Run Memory [ "--template", "Mem: <usedvbar> <usedipat> <used>/<total>M (<usedratio>%)"
+                                 ] 100
 
                 -- Date monitor
                     , Run Date "%b %d %Y (%H:%M)" "date" 10
 
                 -- CPU Freq monitor
-                    , Run CpuFreq [ "--template", "<cpu0>GHz"
-                                  , "--Low"     , "2"
-                                  , "--High"    , "4"
-                                  , "--low"     , "lightblue"
-                                  , "--normal"  , "white"
-                                  , "--high"    , "green"
-                                  ] 50
+--                    , Run CpuFreq [ "--template", "<cpu0>GHz"
+--                                  , "--Low"     , "2"
+--                                  , "--High"    , "4"
+--                                  , "--low"     , "lightblue"
+--                                  , "--normal"  , "white"
+--                                  , "--high"    , "green"
+--                                  ] 50
 
                 -- Core Temp monitor
 --                    , Run CoreTemp [ "--template", "Temp:<Tdie> <Tccd1>糖"
@@ -57,9 +57,12 @@ Config { font = "xft:TerminessTTF Nerd Font:size=11"
                                    , "--normal", "yellow" -- normal usage color 
                                    , "--high"  , "red"    -- high usage color                   
                                    ] 10
+                    , Run Com "cpufreq.sh" [] "freqavg" 50
+                    , Run TopMem ["--template", "<name1>"
+                                 ] 100
                     , Run StdinReader
                     ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = "[ ] %StdinReader%   }{<fc=#2AF132> Cpu: (%multicpu%) %cpufreq% %multicoretemp%</fc> | <fc=#F46C6C>%memory%  </fc> | <fc=#FFC600>%enp4s0% ﯱ</fc> | <fc=#5CEADF>%date%  </fc>"
+        , template = "[ ] %StdinReader%} %topmem% {<fc=#2AF132> Cpu: (%multicpu%) %freqavg% Ghz %multicoretemp%</fc> | <fc=#F46C6C>%memory%  </fc> | <fc=#FFC600>%enp4s0% ﯱ</fc> | <fc=#5CEADF>%date%  </fc>"
 
