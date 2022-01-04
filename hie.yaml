@@ -1,0 +1,7 @@
+cradle:
+  stack:
+    - path: "././xmonad.hs"
+      component: "xmonad-ntrx:exe:xmonad"
+
+    - path: "././Paths_xmonad_ntrx.hs"
+      component: "xmonad-ntrx:exe:xmonad"

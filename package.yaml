@@ -1,0 +1,24 @@
+name: xmonad-ntrx
+version: 0.1.0
+synopsis: my custom xmonad settings
+github: neoterux/xmonad-config
+author: neoterux
+
+dependencies:
+  - X11
+  - base
+  - containers
+  - xmonad
+  - xmonad-contrib
+  - xmobar
+  - netlink
+
+executables:
+  xmonad:
+    main: xmonad.hs
+    ghc-options:
+      - -Wall
+      - -fwarn-tabs
+      - -threaded
+      - -O2
+      - -with-rtsopts=-N4

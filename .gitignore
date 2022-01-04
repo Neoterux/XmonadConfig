@@ -8,6 +8,11 @@ xmonad-x86_64-linux
 xmonad-*
 !xmonad-contrib
 
+# Other
+*.old
+.vscode/
+
 # stack
 *.lock
 .stack-work/
+dist-newstyle/
