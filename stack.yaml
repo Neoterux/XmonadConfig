@@ -1,7 +1,8 @@
-resolver: #lts-17.15
-  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/17/15.yaml
+resolver: nightly-2022-01-04
+  # url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/17/15.yaml
 
 packages:
+- ./
 - xmonad
 - xmonad-contrib
 - xmobar
@@ -12,12 +13,12 @@ extra-deps:
     # - X11-1.10.2
 
 flags:
-  #  xmobar:
-  #    with_xft: true
-  #    with_threaded: true
-  #    with_dbus: true
-  #    with_utf8: true
-  #    with_xpm: true
+  xmobar:
+    with_xft: true
+    with_threaded: true
+    with_dbus: true
+    with_utf8: true
+    with_xpm: true
 
 arch: x86_64
 
