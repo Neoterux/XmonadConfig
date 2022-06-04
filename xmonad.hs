@@ -66,6 +66,7 @@ import XMonad.Hooks.ManageHelpers
 -- *** ADDIIONALS
 -- import XMonad.Actions.MessageFeedback
 -- import XMonad.Util.EZConfig --(additionalKeys, checkKeymap)
+import XMonad.Actions.FloatSnap
 import System.Exit
         {--( exitWith
           , ExitCode( ExitSuccess) )--}
@@ -257,7 +258,14 @@ mouseBinding :: (XConfig l) -> [( (KeyMask, Button), Window -> X() )]
 mouseBinding (XConfig {XMonad.modMask = modm}) = 
     -- mod-button1[left-click], set the window in floating mode and move by dragging
   [ ((modm, button1), \w -> focus w >> mouseMoveWindow w
-                                    >> windows W.shiftMaster)
+                                    >> windows W.shiftMaster
+                                    >> afterDrag (snapMagicMove (Just 50) (Just 50) w))
+  , ((modm .|. shiftMask, button1), \w -> focus w 
+                                    >> mouseMoveWindow w 
+                                    >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w ))
+  , ((modm, button3), \w -> focus w
+                            >> mouseResizeWindow w
+                            >> afterDrag (snapMagicResize [R,D] (Just 50) (Just 50) w))
     -- mod-mouse-wheel-button shift between tiling window to the master
   , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
   ]
