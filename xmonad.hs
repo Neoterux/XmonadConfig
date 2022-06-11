@@ -6,75 +6,44 @@
   repo: https://github.com/Neoterux/XmonadConfig
   crkbd: https://github.com/foostan/crkbd
 --}
--- import Prelude hiding ((>>))
 import XMonad
 -- **** LAYOUTS IMPORTS
 -- Layout to use
--- import XMonad.Layout.WindowArranger 
-            {--( windowArrange
-            , windowArrangeAll
-            , WindowArrangerMsg(
-                DecreaseUp, DecreaseDown, DecreaseLeft, DecreaseRight
-              , IncreaseUp, IncreaseDown, IncreaseLeft, IncreaseRight) )--}
 -- provide a spacing between Talls
 import XMonad.Layout.Spacing 
 --            ( spacing )
 -- import XMonad.Layout.Tabbed
 import XMonad.Layout.Accordion
---            ( Accordion(..) )
--- import XMonad.Layout.ToggleLayouts
---            ( ToggleLayouts )
--- import XMonad.Layout.MouseResizableTile
 -- ** No Border configuration
 import XMonad.Layout.NoBorders
-    {--            ( noBorders
-            , smartBorders) --}
 -- ** Resizable Tile Layout
 import XMonad.Layout.ResizableTile 
-{--           ( ResizableTall(..)
-            , MirrorResize(MirrorShrink, MirrorExpand) )--}
 -- ** Grid Layout
 import XMonad.Layout.Grid 
---            ( Grid(..) )
 -- *** HOOKS
--- import XMonad.ManageHook 
-    {--            ( composeAll
-            , className
-            , doFloat 
-            , doIgnore
-            , doShift )--}
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.DynamicProperty
---            ( dynamicTitle )
 import XMonad.Hooks.EwmhDesktops
-    {--            ( ewmh
-            , fullscreenEventHook )--}
 import XMonad.Hooks.DynamicLog
-    {--            ( ppCurrent
-            , wrap
-            , xmobarPP
-            , xmobarColor
-            , statusBar ) --}
--- import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
-    {--            ( avoidStruts
-            , docks )--}
 import XMonad.Hooks.ManageHelpers
 -- *** CONFIGS
--- import XMonad.Config.Prime( Resize( Shrink, Expand ) )
+
+-- *** PROMPT
+import XMonad.Prompt
+import XMonad.Prompt.RunOrRaise
+import XMonad.Prompt.Window
+import XMonad.Prompt.Shell
 
 -- *** ADDIIONALS
--- import XMonad.Actions.MessageFeedback
--- import XMonad.Util.EZConfig --(additionalKeys, checkKeymap)
 import XMonad.Actions.FloatSnap
+import XMonad.Util.Run(spawnPipe)
 import System.Exit
-        {--( exitWith
-          , ExitCode( ExitSuccess) )--}
--- import Data.Monoid
--- import Data.IORef
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
+
+import Data.Maybe (fromJust)
 
 {-- :Config-documentation {{{
           **********          BEGIN OF THE CONFIGURATION
@@ -175,6 +144,10 @@ myStatusBar = "xmobar"
 -- workspaces
 wspaces :: [String]
 wspaces = ["1:main", "2:web", "3:dev", "4:games", "5:studies", "6:mtg", "7", "8", "9", "10"] 
+wspacesIndex = M.fromList $ zip wspaces [1 ..]
+clickable ws = "<action=xdotool key super+" ++ show i ++ ">" ++ ws ++ "</action>"
+	where
+	  i = fromJust $ M.lookup ws wspacesIndex
 
 {-- 
           KEYMAP CONFIGURATION
@@ -189,6 +162,7 @@ keybind :: (XConfig l) -> [((KeyMask, KeySym), X())]
 keybind conf@(XConfig {XMonad.modMask = modm}) =
     -- Launch terminal with alt + control + T
   [ ((mod1Mask .|. controlMask, xK_t), spawn $ XMonad.terminal conf)
+
 
   , ((modm, xK_Return), spawn $XMonad.terminal conf) -- 'Legacy' terminal invocation
 
@@ -212,15 +186,6 @@ keybind conf@(XConfig {XMonad.modMask = modm}) =
 
   -- Exit Xmonad
   , ((modm .|. shiftMask, xK_q), io $ exitWith ExitSuccess)
-
-  -- Toggle Follow Mouse Focus
---   , ((modm, xK_m), io toggleState)
-
-    -- Decrease left width
---  , ((modm .|. shiftMask, xK_a), sendMessage (DecreaseLeft  1))
---  , ((modm .|. shiftMask, xK_w), sendMessage (DecreaseUp    1))
---	, ((modm .|. shiftMask, xK_d), sendMessage (DecreaseRight 1))
---	, ((modm .|. shiftMask, xK_s), sendMessage (DecreaseDown  1))
   ]
   ++
   {-- 
@@ -293,7 +258,6 @@ manageZoomHook =
       shouldSink  wtitle = wtitle `elem`    tileTitles
       wdoSink = (ask >>= doF . W.sink) <+> doF W.swapDown
 
--- myManageHook :: Query (D.Semigroup.Internal.Endo WindowSet)
 myManageHook = composeAll $ manageZoomHook ++
     -- General manageHooks
     -- ** Browsers
@@ -350,7 +314,9 @@ myManageHook = composeAll $ manageZoomHook ++
 -- : Xmobar Configuration {{{
 myPP :: PP
 myPP = xmobarPP {
-  ppCurrent = xmobarColor "#ffb601" "" . wrap "[" "]"
+  ppCurrent = xmobarColor "#ffb601" "" . wrap "[" "]",
+  ppVisible = xmobarColor "#ffb601" "" . wrap "" "" . clickable,
+  ppSep = "|"
 }
 
 -- Layout definition
@@ -374,7 +340,6 @@ mfocusStateHook :: Event -> X All
 mfocusStateHook ev@(CrossingEvent {ev_window=w, ev_event_type=t}) 
                   |  t== enterNotify || ev_mode ev == notifyNormal  = do
                         whenX (io readState) (focus w)
-                        return $ All True
                   |  otherwise = def All True
 -}
 -- : Layout Hook {{{
@@ -388,7 +353,12 @@ myLayoutHook = resizableTall
 -- }}}
 -- : Startup hook {{{
 
-myStartupHook = setWMName "LG3D"
+myStartupHook = do 
+	setWMName "LG3D"
+	spawn "~/.config/xmonad/scripts/autostart.sh &"
+	spawn "~/.config/xmonad/scripts/systray.sh &"
+	spawn "~/.config/xmonad/scripts/backlight.sh &"
+	spawn "~/.config/xmonad/scripts/startup-apps.sh &"
 -- }}}
 
 -- : Configuration Monad {{{
