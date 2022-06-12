@@ -1,0 +1,14 @@
+#!/bin/sh
+
+
+setxkbmap us intl-unicode &
+
+# Script to fix screen settings
+[ -x ~/.scripts/config_monitors ] && ~/.scripts/config_monitors &
+#$HOME/.config/config_monitors &
+
+feh --bg-scale ~/Pictures/wallpaper.png &
+
+# Compositor 
+picom --experimental-backends &
+

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=XSession
+Name=Xmonad
+Comment=Lightweight X11 tiled window manager written in haskell
+Exec=xmonad
+Encoding=UTF-8
