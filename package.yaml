@@ -1,8 +1,10 @@
 name: xmonad-ntrx
-version: 0.1.0
+version: 0.9.0
 synopsis: my custom xmonad settings
+homepage: https://github.com/neoterux/dotfiles
 github: neoterux/xmonad-config
-author: neoterux
+author: Luis Bajaña
+maintainer: labfernandez2014@gmail.com
 
 dependencies:
   - X11
