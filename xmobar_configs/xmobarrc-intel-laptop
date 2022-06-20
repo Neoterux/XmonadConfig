@@ -9,7 +9,7 @@ Config { font = "xft:TerminessTTF Nerd Font:size=11"
 --        , iconRoot = "."
         , allDesktops = True
         , overrideRedirect = True
-        , commands = [Run Network "enp4s0" ["--template", "<tx>KB|<tx>KB"
+        , commands = [Run Network "wlan0" ["--template", "<tx>KB|<tx>KB"
                                            , "--Low"    , "30"
                                            , "--High"   , "700"
                                            , "--low"    , "lightblue"
@@ -17,29 +17,16 @@ Config { font = "xft:TerminessTTF Nerd Font:size=11"
                                            , "--high"   , "red"
                                            ] 10
                 -- Memory monitor
-                    , Run Memory [ "--template", "Mem: <usedvbar> <usedipat> <used>/<total>M (<usedratio>%)"
+                    , Run Memory [ "--template", "<usedvbar> <usedipat> <used>/<total>M (<usedratio>%)"
                                  ] 100
 
                 -- Date monitor
                     , Run Date "%b %d %Y (%H:%M)" "date" 10
+                -- cpufreq
+                , Run CpuFreq 
+                [ "-t", "<avg>"
 
-                -- CPU Freq monitor
---                    , Run CpuFreq [ "--template", "<cpu0>GHz"
---                                  , "--Low"     , "2"
---                                  , "--High"    , "4"
---                                  , "--low"     , "lightblue"
---                                  , "--normal"  , "white"
---                                  , "--high"    , "green"
---                                  ] 50
-
-                -- Core Temp monitor
---                    , Run CoreTemp [ "--template", "Temp:<Tdie> <Tccd1>糖"
---                                   , "--Low"     , "40"  -- units °C
---                                   , "--High"    , "60"  -- units °C
---                                   , "--low"     , "lightblue" -- low color
---                                   , "--normal"  , "gray90"    -- normal color
---                                   , "--high"    , "red"       -- high color
---                                   ] 50
+                ] 250
 
                 -- Multi Core temp monitor
                 , Run MultiCoreTemp [ "--template", "<avg>°C"
@@ -48,21 +35,31 @@ Config { font = "xft:TerminessTTF Nerd Font:size=11"
                                     , "--low"     , "lightblue"
                                     , "--normal"  , "yellow"
                                     , "--high"    , "red"
-                                    ] 10
+                                    ] 100
                 -- Cpu activity monitor
                     , Run MultiCpu [ "-t", "<total>%"
                                    , "--Low"   , "30"    -- units %
                                    , "--High"  , "50"     -- units %
                                    , "--low"   , "green"  -- low usage color
                                    , "--normal", "yellow" -- normal usage color 
-                                   , "--high"  , "red"    -- high usage color                   
-                                   ] 10
-                    , Run Com "cpufreq.sh" [] "freqavg" 50
+                                   , "--high"  , "red"    -- high usage borderColor
+                                   
+                                   ] 500
+                    --, Run Com "cpufreq.sh" [] "freqavg" 50
                     , Run TopMem ["--template", "<name1>"
                                  ] 100
                     , Run StdinReader
+                    , Run BatteryP ["BAT0"]
+                    [ "-t", "<acstatus><watts>W (<left>%)"
+                    , "-L", "10", "-H", "80", "-p", "3"
+                    , "--", "-O", "<fc=green>On</fc> - ", "-i", ""
+                    , "-L", "-15", "-H", "-5"
+                    , "-l", "red", "-m", "blue", "-h", "green"
+                    , "-a", "notify-send -u critical 'Battery running out!!'"
+                    , "-A", "3"
+                    ] 750
                     ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = "[ ] %StdinReader%} %topmem% {<fc=#2AF132> Cpu: (%multicpu%) %freqavg% Ghz %multicoretemp%</fc> | <fc=#F46C6C>%memory%  </fc> | <fc=#FFC600>%enp4s0% ﯱ</fc> | <fc=#5CEADF>%date%  </fc>"
+        , template = "[ ] %StdinReader%} %topmem% {<fc=#2AF132> (%multicpu%) %cpufreq% Ghz %multicoretemp%</fc> | <fc=#F46C6C>%memory%  </fc> | <fc=#FFC600>%wlan0%   </fc> | %battery% | <fc=#5CEADF>%date%  </fc>"
 

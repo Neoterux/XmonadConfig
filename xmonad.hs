@@ -244,6 +244,7 @@ mouseBinding (XConfig {XMonad.modMask = modm}) =
 -- manageZoomHook :: [Query (Endo WindowSet)]
 manageZoomHook = 
     [ (className =? zoomClassName) <&&> shouldFloat <$> title --> doFloat
+  ,   (className =? zoomClassName) <&&> title =? "Settings" --> doCenterFloat
   , (className =? zoomClassName) <&&> shouldSink  <$> title --> wdoSink
     ]
     where
@@ -295,6 +296,7 @@ myManageHook = composeAll $ manageZoomHook ++
   , className =? "bashrun"                    --> doFloat
   , className =? "feh"                        --> doFloat
   , isFullscreen                              --> doFullFloat
+  , className =? "Pavucontrol"                --> doCenterFloat
   ]
     where
       teamsClass = "Microsoft Teams - Preview"

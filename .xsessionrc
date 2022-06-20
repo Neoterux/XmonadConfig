@@ -8,6 +8,7 @@ setxkbmap us intl-unicode &
 #$HOME/.config/config_monitors &
 
 feh --bg-scale ~/Pictures/wallpaper.png &
+redshift -P -O 4500 &
 
 # Compositor 
 picom --experimental-backends &
