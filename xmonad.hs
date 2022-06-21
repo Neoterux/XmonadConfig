@@ -37,6 +37,8 @@ import XMonad.Prompt.Shell
 
 -- *** ADDIIONALS
 import XMonad.Actions.FloatSnap
+import XMonad.Util.ClickableWorkspaces
+import XMonad.Layout.Named
 import XMonad.Util.Run(spawnPipe)
 import System.Exit
 
@@ -155,6 +157,14 @@ clickable ws = "<action=xdotool key super+" ++ show i ++ ">" ++ ws ++ "</action>
 --}
 myKeymap :: (XConfig l) -> M.Map (KeyMask, KeySym) (X())
 myKeymap = M.fromList . keybind  -- Don't touch to add a keymap
+
+layoutPrinter :: String -> String
+layoutPrinter "Spacing Full" = "<icon=layout_full.xbm/>"
+layoutPrinter "Spacing ResizableTall" = "<icon=layout_restall.xbm/>"
+layoutPrinter "Spacing Grid" = "<icon=layout_grid.xbm/>"
+layoutPrinter "Spacing Accordion" = "<icon=icons/layout_accordion.xbm/>"
+layoutPrinter x = x
+
 
 -- : Keymaps {{{
 keybind :: (XConfig l) -> [((KeyMask, KeySym), X())]
@@ -314,11 +324,12 @@ myManageHook = composeAll $ manageZoomHook ++
       BAR CONFIGURATION
 --}
 -- : Xmobar Configuration {{{
-myPP :: PP
+-- myPP :: PP
 myPP = xmobarPP {
   ppCurrent = xmobarColor "#ffb601" "" . wrap "[" "]",
-  ppVisible = xmobarColor "#ffb601" "" . wrap "" "" . clickable,
-  ppSep = "|"
+  ppVisible = xmobarColor "#ffb601" "" . wrap "" "",
+  ppSep = "|",
+  ppLayout = layoutPrinter
 }
 
 -- Layout definition

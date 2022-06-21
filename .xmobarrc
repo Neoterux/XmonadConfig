@@ -3,6 +3,7 @@ Config { font = "xft:TerminessTTF Nerd Font:size=11"
         , border = NoBorder
         , bgColor = "#1E1E1E"
         , fgColor = "grey"
+        , iconRoot = "~/.xmonad/icons/"
         , position = Top
 --        , textOffset = -1
 --        , iconOffset = -1
@@ -48,7 +49,13 @@ Config { font = "xft:TerminessTTF Nerd Font:size=11"
                                     , "--low"     , "lightblue"
                                     , "--normal"  , "yellow"
                                     , "--high"    , "red"
-                                    ] 10
+                                    ] 250
+                -- K10 temp (Ryzen)
+                    , Run K10Temp "0000:00:18.3" 
+                    [ "-t", "<Tdie>C | <Tccd1>C|<Tctl>"
+                    , "-L", "35", "-H", "60"
+                    , "-l", "lightblue", "-n", "gray90", "-h", "red"
+                    ] 500
                 -- Cpu activity monitor
                     , Run MultiCpu [ "-t", "<total>%"
                                    , "--Low"   , "30"    -- units %
@@ -64,5 +71,5 @@ Config { font = "xft:TerminessTTF Nerd Font:size=11"
                     ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = "[ ] %StdinReader%} %topmem% {<fc=#2AF132> Cpu: (%multicpu%) %freqavg% Ghz %multicoretemp%</fc> | <fc=#F46C6C>%memory%  </fc> | <fc=#FFC600>%enp4s0% ﯱ</fc> | <fc=#5CEADF>%date%  </fc>"
+        , template = "[ ] %StdinReader%} %topmem% {<fc=#2AF132> Cpu: (%multicpu%) %freqavg% Ghz %multicoretemp%</fc> | <fc=#F46C6C>%memory%  </fc> | <fc=#FFC600>%enp4s0% ﯱ </fc> | <fc=#5CEADF>%date%  </fc>"
 
